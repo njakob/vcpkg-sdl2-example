@@ -1,0 +1,94 @@
+on:
+  push:
+    branches-ignore:
+      - master
+  workflow_dispatch:
+name: CI
+jobs:
+  linux-build:
+    name: Linux Build
+    runs-on: ubuntu-20.04
+    env:
+      CMAKE_PRESET: linux-release
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y libx11-dev libxft-dev libxext-dev
+          sudo apt install -y libwayland-dev libxkbcommon-dev libegl1-mesa-dev
+          sudo apt install -y libibus-1.0-dev
+          sudo apt install -y ninja-build
+      - name: Checkout Current Branch
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Install vckpg dependencies
+        uses: lukka/run-vcpkg@v10
+        with:
+          appendedCacheKey: "libx11-dev libxft-dev libxext-dev libwayland-dev libxkbcommon-dev libegl1-mesa-dev libibus-1.0-dev ninja-build"
+          vcpkgDirectory: "${{github.workspace}}/vcpkg"
+      - name: CCache
+        uses: hendrikmuhs/ccache-action@v1
+        with:
+          key: linux
+      - name: Run CMake
+        uses: lukka/run-cmake@v10
+        with:
+          cmakeListsTxtPath: "${{github.workspace}}/CMakeLists.txt"
+          configurePreset: ${{env.CMAKE_PRESET}}
+          buildPreset: ${{env.CMAKE_PRESET}}
+        env:
+          CC: gcc-10
+          CXX: g++-10
+  macos-build:
+    name: MacOS Build
+    runs-on: macos-11
+    env:
+      CMAKE_PRESET: macos-release
+    steps:
+      - name: Install dependencies
+        run: |
+          brew install ninja
+      - name: Checkout Current Branch
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Install vckpg dependencies
+        uses: lukka/run-vcpkg@v10
+        with:
+          appendedCacheKey: "ninja"
+          vcpkgDirectory: "${{github.workspace}}/vcpkg"
+      - name: CCache
+        uses: hendrikmuhs/ccache-action@v1
+        with:
+          key: macos
+      - name: Run CMake
+        uses: lukka/run-cmake@v10
+        with:
+          cmakeListsTxtPath: "${{github.workspace}}/CMakeLists.txt"
+          configurePreset: ${{env.CMAKE_PRESET}}
+          buildPreset: ${{env.CMAKE_PRESET}}
+  windows-build:
+    name: Windows Build
+    runs-on: windows-2019
+    env:
+      CMAKE_PRESET: windows-release
+    steps:
+      - name: Install dependencies
+        run: |
+          choco install ninja
+      - name: Checkout Current Branch
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Install vckpg dependencies
+        uses: lukka/run-vcpkg@v10
+        with:
+          appendedCacheKey: "ninja"
+          vcpkgDirectory: "${{github.workspace}}/vcpkg"
+      - name: Run CMake
+        uses: lukka/run-cmake@v10
+        with:
+          cmakeListsTxtPath: "${{github.workspace}}/CMakeLists.txt"
+          configurePreset: ${{env.CMAKE_PRESET}}
+          buildPreset: ${{env.CMAKE_PRESET}}
