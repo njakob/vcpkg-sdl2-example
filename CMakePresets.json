@@ -66,22 +66,19 @@
       "name": "linux-release",
       "configurePreset": "linux-release",
       "displayName": "Linux release",
-      "description": "Build with Linux release settings",
-      "targets": "install"
+      "description": "Build with Linux release settings"
     },
     {
       "name": "windows-release",
       "configurePreset": "windows-release",
       "displayName": "Windows release",
-      "description": "Build with Windows release settings",
-      "targets": "install"
+      "description": "Build with Windows release settings"
     },
     {
       "name": "macos-release",
       "configurePreset": "macos-release",
       "displayName": "MacOS release",
-      "description": "Build with MacOS release settings",
-      "targets": "install"
+      "description": "Build with MacOS release settings"
     },
     {
       "name": "linux-development",
