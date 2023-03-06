@@ -17,7 +17,7 @@ auto ProcessInputs() -> void {
   }
 }
 
-auto main() -> int {
+auto main(int argc, char* argv[]) -> int {
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
     std::cout << "Unable to initialize SDL: " << SDL_GetError() << std::endl;
     return EXIT_FAILURE;
